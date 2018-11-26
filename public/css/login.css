@@ -1,0 +1,30 @@
+
+
+.up,.down{
+    border: 1px solid #d9dcdf;
+    border-radius: 15px;
+    padding: 4px 10px;
+    margin-bottom: 20px;
+}
+.up input,.down input{
+    background-color: transparent;
+    border: none;
+    padding: 4px 20px;
+}
+::-moz-placeholder { color: #d9dcdf; }
+::-webkit-input-placeholder { color:#d9dcdf; }
+:-ms-input-placeholder { color:#d9dcdf; }
+.up i,.down i{
+    /* margin-right: 30px; */
+    color: #d9dcdf;
+}
+.btn{
+    width: 320px;
+    border-radius: 18px;
+        padding: 8px 0!important;
+    /* margin-left: -6px; */
+    font-size: 16px;
+}
+.btn input{
+    border-radius: 15px;
+}

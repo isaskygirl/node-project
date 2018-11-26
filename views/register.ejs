@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>XX后台管理系统</title>
+  <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/register.css">
+</head>
+
+<body>
+  <div class=" box">
+    <%- include('./common/head') %>
+      <div class="main register_main">
+        <form action="" class="form">
+          <div class="little_title">XXX后台管理系统注册</div>
+          <div class="user_reg">
+            <span>用户名:</span>
+            <input type="text" name="username">
+          </div>
+          <div class="user_reg">
+            <span>密码:</span>
+            <input type="text" name="password"">
+          </div>
+          <div class="user_reg">
+            <span>确认密码:</span>
+            <input type="text">
+          </div>
+          <div class="user_reg">
+            <span>昵称:</span>
+            <input type="text">
+          </div>
+          <div class="user_reg">
+            <span>手机号码:</span>
+            <input type="text" >
+          </div>
+          <div class="user_reg2">
+              <span>管理员:</span>
+              <input type="radio">&nbsp; yes
+              <input type="radio">&nbsp; no
+          </div>
+          <div class="btn">
+              <input type="submit" class="btn btn-info dropdown-toggle " value="注册">
+            </div>
+        </form>
+      </div>
+      <%- include('./common/foot') %>
+  </div>
+
+</body>
+
+</html>
