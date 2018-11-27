@@ -6,15 +6,18 @@ router.get('/', function(req, res, next) {
   res.render('index');
 });
 
-router.get('/register.html', function(req, res, next) {
+router.get('/register.html', function(req, res) {
   res.render('register');
 });
-router.get('/login.html', function(req, res, next) {
+router.post('/register', function(req, res) {
+  res.render('register');
+});
+router.get('/login.html', function(req, res) {
   res.render('login');
 });
-router.get('/userManage.html', function(req, res, next) {
-  res.render('userManage');
-});
+// router.get('/userManage.html', function(req, res, next) {
+//   res.render('userManage');
+// });
 router.get('/phoneManage.html', function(req, res, next) {
   res.render('phoneManage');
 });
