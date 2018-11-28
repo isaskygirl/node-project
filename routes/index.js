@@ -9,9 +9,9 @@ router.get('/', function(req, res, next) {
 router.get('/register.html', function(req, res) {
   res.render('register');
 });
-router.post('/register', function(req, res) {
-  res.render('register');
-});
+// router.post('/register', function(req, res) {
+//   res.render('register');
+// });
 router.get('/login.html', function(req, res) {
   res.render('login');
 });

@@ -16,7 +16,7 @@
   <div class=" box">
     <%- include('./common/head') %>
       <div class="main">
-        <form action="/register" class="form" method="POST">
+        <form action="/users/login" class="form" method="POST">
           <div class="up">
             <i class="glyphicon glyphicon-user"></i>
             <input type="text" name="username" placeholder="用户名">
@@ -28,6 +28,7 @@
           <div class="btn">
             <input type="submit" class="btn btn-info dropdown-toggle " value="登录">
           </div>
+          <a href="/register.html" class="zhzc">还没有账号？立即注册</a>
         </form>
 
 

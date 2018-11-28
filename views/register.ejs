@@ -16,7 +16,7 @@
   <div class=" box">
     <%- include('./common/head') %>
       <div class="main register_main">
-        <form action="" class="form">
+        <form action="/users/register" class="form" method="POST">
           <div class="little_title">XXX后台管理系统注册</div>
           <div class="user_reg">
             <span>用户名:</span>
@@ -24,28 +24,29 @@
           </div>
           <div class="user_reg">
             <span>密码:</span>
-            <input type="text" name="password"">
+            <input type="password" name="password"">
           </div>
           <div class="user_reg">
             <span>确认密码:</span>
-            <input type="text">
+            <input type="password">
           </div>
           <div class="user_reg">
             <span>昵称:</span>
-            <input type="text">
+            <input type="text" name="nickname">
           </div>
           <div class="user_reg">
             <span>手机号码:</span>
-            <input type="text" >
+            <input type="text" name="phone" >
           </div>
           <div class="user_reg2">
               <span>管理员:</span>
-              <input type="radio" name="radio">&nbsp; yes
-              <input type="radio" name="radio">&nbsp; no
+              <input type="radio" name="isAdmin" value="是">&nbsp; yes
+              <input type="radio" name="isAdmin" value="否">&nbsp; no
           </div>
           <div class="btn">
               <input type="submit" class="btn btn-info dropdown-toggle " value="注册">
             </div>
+            <a href="/login.html" class="zhzc">已有账号，立即登录</a>
         </form>
       </div>
       <%- include('./common/foot') %>
