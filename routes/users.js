@@ -1,5 +1,6 @@
 var express = require('express');
 var MongoClient = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectId;
 var router = express.Router();
 var async = require('async');
 
@@ -8,28 +9,92 @@ var url = 'mongodb://127.0.0.1:27017';
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
+  //这里做数据分页操作
+
+  //获取前端传过来的数据
+  var page = parseInt( req.query.page) || 1;  //默认是第一页
+  var pageSize = parseInt(req.query.pageSize) || 5;  //每页显示的条数
+  var totalSize = 0; //总条数---需要查询数据库
+
+  //首先查询数据库中所有的条数
+  //其次查询当前页的数据   ---可使用 async 来分为两个步骤
   MongoClient.connect(url, { useNewUrlParser: true }, function (err, client) {
+    if (err) {
+      res.render('error', {
+        message: '连接失败',
+        error: err
+      })
+      return;
+    }
     var db = client.db('nodejs-project');
+    async.series([
+      function(cb){
+        //查询全部
+        db.collection('user').find().count(function(err,num){
+          if(err){
+              cb(err);
+          }else{
+            totalSize = num;
+            cb(null);
+          }
+        })
 
-    db.collection('user').find().toArray(function (err, data) {
-      if (err) {
-        console.log('查询用户数据失败，错误是：', err);
-        //将错误通过error.ejs渲染到页面
-        res.render('error', {
-          message: '查询失败',
-          error: err
-        });
-      } else {
-        console.log(data);
-        res.render('userManage', {
-          list: data
-        });
+      },function(cb){
+          //查询当前页的数据  page * pageSize - pageSize
+          db.collection('user').find().limit(pageSize).skip(page*pageSize - pageSize).toArray(function(err,data){
+            if(err){
+              cb(err);
+            }else{
+              cb(null,data);
+            }
+          })
+
       }
-      //无论是否存在错误，都要关闭数据库的连接
-      client.close();
-
+        //results 是一个数组 【undefined ， data】，第一个没穿数据：undefined
+        //第二个传了数据 ：data
+    ],function(err,results){ 
+      if(err){
+        res.render('error',{
+          message:'查询数据错误',
+          error:err
+        })
+      }else{
+        //计算出总条数，将其传递到前端
+        var totalPage = Math.ceil(totalSize/pageSize);
+        res.render('userManage',{
+          list : results[1],
+          totalPage : totalPage,
+          curPage: page,    //当前页
+          pageSize:pageSize
+        })
+      }
     })
   })
+
+
+
+  /*  MongoClient.connect(url, { useNewUrlParser: true }, function (err, client) {
+     var db = client.db('nodejs-project');
+ 
+     db.collection('user').find().toArray(function (err, data) {
+       if (err) {
+         console.log('查询用户数据失败，错误是：', err);
+         //将错误通过error.ejs渲染到页面
+         res.render('error', {
+           message: '查询失败',
+           error: err
+         });
+       } else {
+         // console.log(data);
+         res.render('userManage', {
+           list: data
+         });
+       }
+       //无论是否存在错误，都要关闭数据库的连接
+       client.close();
+ 
+     })
+   }) */
 });
 router.post('/login', function (req, res, next) {
   // console.log(req.body);
@@ -134,13 +199,13 @@ router.post('/register', function (req, res, next) {
   var password = req.body.password;
   var nickname = req.body.nickname;
   var phone = req.body.phone;
-  var isAdmin = req.body.isAdmin === '是' ? " true " : " false";
-  console.log(username,password,nickname,phone,isAdmin);
+  var isAdmin = req.body.isAdmin === '是' ? true : false;
+  // console.log(username, password, nickname, phone, isAdmin);
 
   // res.send(""); 
 
   //从这里开始做用户名查询，不存在就插入
- MongoClient.connect(url, { useNewUrlParser: true }, function(err,client){
+  MongoClient.connect(url, { useNewUrlParser: true }, function (err, client) {
     if (err) {
       res.render('error', {
         message: '连接数据库失败',
@@ -172,28 +237,28 @@ router.post('/register', function (req, res, next) {
           nickname: nickname,
           phone: phone,
           isAdmin: isAdmin
-        },function(err){
-            if(err){
-              cb(err);
-            }else{
-              cb(null);
-            }
+        }, function (err) {
+          if (err) {
+            cb(err);
+          } else {
+            cb(null);
+          }
         })
       }
     ], function (err, result) {
-      if(err){
-        res.render('error',{
-          message:'失败',
-          error:err
+      if (err) {
+        res.render('error', {
+          message: '失败',
+          error: err
         })
-      }else{
+      } else {
         res.redirect('/login.html');
       }
 
       //关闭数据库连接
       client.close();
     })
-  }) 
+  })
 
 
 
@@ -231,5 +296,38 @@ router.post('/register', function (req, res, next) {
    }) */
 
 })
+
+//这里是删除的路由操作
+router.get('/delete', function (req, res, next) {
+  //req中提供了一个方法可以获得？后面的字符串
+  var id = req.query.id;
+  // console.log(id)
+  MongoClient.connect(url, { useNewUrlParser: true }, function (err, client) {
+    if (err) {
+      res.render('error', {
+        message: '连接失败',
+        error: err
+      })
+      return;
+    }
+    var db = client.db('nodejs-project');
+    db.collection('user').deleteOne({
+      _id: ObjectId(id)
+    }, function (err, data) {
+      if (err) {
+        res.render('error', {
+          message: '删除失败',
+          error: err
+        })
+      } else {
+        //删除成功，将页面刷新
+        // res.send('<script>location.reload();</script>')
+        res.redirect('/users')
+      }
+      client.close();
+    })
+  })
+})
+
 
 module.exports = router;

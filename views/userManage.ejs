@@ -55,12 +55,26 @@
                                 <tbody>
                                     <% for(var i = 0; i<list.length; i++){%>
                                         <tr>
-                                            <th scope="row"><%= i+1 %></th>
-                                            <td><%= list[i].username %></td>
-                                            <td><%= list[i].nickname %></td>
-                                            <td><%= list[i].phone %></td>
-                                            <td><%= list[i].isAdmin %></td>
-                                            <td></td>
+                                            <th scope="row">
+                                                <%= i+1 %>
+                                            </th>
+                                            <td>
+                                                <%= list[i].username %>
+                                            </td>
+                                            <td>
+                                                <%= list[i].nickname %>
+                                            </td>
+                                            <td>
+                                                <%= list[i].phone %>
+                                            </td>
+                                            <td>
+                                                <%= list[i].isAdmin %>
+                                            </td>
+                                            <td>
+                                                <% if (!list[i].isAdmin){%>
+                                                    <a href="/users/delete?id=<%= list[i]._id %>">删除</a>
+                                                    <%}%>
+                                            </td>
                                         </tr>
 
                                         <% } %>
@@ -69,14 +83,18 @@
                             <nav aria-label="Page navigation">
                                 <ul class="pagination">
                                     <li>
-                                        <a href="#" aria-label="Previous">
+                                        <a href="/users?page=<%=curPage-1<1?1:curPage-1%>&pageSize=<%=pageSize%>" aria-label="Previous">
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="#">1</a>
-                                    </li>
-                                    <li>
+                                    <!-- 总条数/每页条数 == 需要显示出来的总页数：totalPage    -->
+                                    <% for( var i = 0 ; i <totalPage ; i++ ){%>    
+                                        <li class="<%= curPage === (i+1) ? 'active':'' %>">
+                                            <a href="/users?page=<%=i+1%>&pageSize=<%=pageSize%>"><%= i+1 %></a>
+                                        </li>
+                                        <%} %>
+
+                                            <!-- <li>
                                         <a href="#">2</a>
                                     </li>
                                     <li>
@@ -87,12 +105,12 @@
                                     </li>
                                     <li>
                                         <a href="#">5</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                        </a>
-                                    </li>
+                                    </li> -->
+                                            <li>
+                                                <a href="/users?page=<%=curPage+1>totalPage?totalPage:curPage+1%>&pageSize=<%=pageSize%>" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
                                 </ul>
                             </nav>
                         </div>

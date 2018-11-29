@@ -9,3 +9,9 @@
     background: rgb(36, 65, 94);
     color: aliceblue;
 }
+.welcome table tbody tr:hover a{
+    color: aliceblue;
+}
+.welcome table tbody tr,th,a{
+    text-align: center;
+}
