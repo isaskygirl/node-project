@@ -73,3 +73,7 @@
     float: right;
     color: black;
 }
+.user_reg  input{
+    text-align: center;
+    vertical-align: middle;
+}

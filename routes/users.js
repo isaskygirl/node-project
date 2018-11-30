@@ -204,7 +204,20 @@ router.post('/register', function (req, res, next) {
   var phone = req.body.phone;
   var isAdmin = req.body.isAdmin === '是' ? true : false;
   // console.log(username, password, nickname, phone, isAdmin);
-
+  if (!username) {
+    res.render('error', {
+      message: '用户名不能为空',
+      error: new Error('用户名不能为空')
+    })
+    return;
+  }
+  if (!password) {
+    res.render('error', {
+      message: '密码不能为空',
+      error: new Error('密码不能为空')
+    })
+    return;
+  }
   // res.send(""); 
 
   //从这里开始做用户名查询，不存在就插入
