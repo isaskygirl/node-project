@@ -41,3 +41,4 @@ $(".list").children().click(function () {
      console.log($(this).parent()) ;
      $(this).parent().hide();
   })
+  

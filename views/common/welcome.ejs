@@ -1,0 +1,17 @@
+<a href="/" id="admin">欢迎您</a>
+<script src="https://cdn.bootcss.com/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    // console.log(document.cookie) ;
+    var cookieString = JSON.stringify(document.cookie);
+    var cookieJson = JSON.parse(cookieString);
+    var arr = cookieJson.split(";");
+    var str = JSON.stringify(arr[1]);
+    var cJ = JSON.parse(str);
+    var arr2 = cJ.split("=");
+    console.log(arr2[1]);
+    if (arr2[1] == "true") {
+        $("#admin").html("欢迎您 管理员");
+    }
+
+
+</script>

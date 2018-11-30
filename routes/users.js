@@ -174,8 +174,12 @@ router.post('/login', function (req, res, next) {
         //cookie的操作---设置保持时间。来验证登录
         res.cookie('nickname', data[0].nickname, {
           maxAge: 60 * 60 * 1000
-        })
+        });
+        res.cookie('isAdmin', data[0].isAdmin, {
+          maxAge: 60 * 60 * 1000
+        });
         // res.redirect('http://localhost:3000');
+        
         res.redirect('/');
       }
       client.close();
