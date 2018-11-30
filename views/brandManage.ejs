@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/css/reset.css">
   <link rel="stylesheet" href="/css/common.css">
   <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="/css/brandManage.css">
 </head>
 
 <body>
@@ -28,10 +29,83 @@
       </div>
       <div class="main shouye_main">
         <div class="row">
-            <%- include('./common/left') %>
+          <%- include('./common/left') %>
+           
           <div class="col-md-9">
             <div class="welcome">
-              这是品牌管理页面
+              <!-- 这是品牌管理页面 -->
+              <button type="button" id="btnX" class="btn btn-primary btn-lg active">新增品牌</button>
+              <table class=" table table-bordered">
+                <thead>
+                  <tr>
+                    <th>序号</th>
+                    <th>品牌LOGO</th>
+                    <th>品牌名称</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for(var i = 0 ; i < list.length ; i++){ %>
+                    <tr>
+                      <th scope="row">
+                        <%= i+1%>
+                      </th>
+                      <td>
+                        <img src="<%= list[i].brandLOGO%>" alt="">
+                      </td>
+                      <td>
+                        <%= list[i].brandName%>
+                      </td>
+                      <td>
+                      
+                        <a href="/brand/delete?brandLOGO=<%= list[i].brandLOGO%>">删除</a>
+                      </td>
+                    </tr>
+                    
+                    <% } %>
+                </tbody>
+              </table>
+              <form action="/brand/newbrand" class="form_xin" method="POST" enctype="multipart/form-data">
+                <div class="little_title">新增品牌</div>
+                <div class="user_reg">
+                  <span>品牌名称:&nbsp;&nbsp;&nbsp;</span>
+                  <input type="text" name="name">
+                </div>
+               
+                <div class="user_reg ">
+                <!-- 上传图片，用form表单，需要将enctype属性 设置为：multipart form -data -->
+                            
+                <span>品牌LOGo:&nbsp;&nbsp;&nbsp;</span>
+                <input type="file" name="file" style="margin-top: 10px; ">
+                <!-- <input type="text" class="imgSrc " style="margin-top:10px; "> -->
+                <!-- <input type="submit" value="上传 "> -->       
+                </div>
+                  <input type="submit" value="确定 " style="background-color: #3b5561; ">
+                  <input type="button" id="quxiao " value="取消 "style="background-color: #3b5561; ">
+              </form>
+              <nav aria-label="Page navigation ">
+                <ul class="pagination ">
+                  <li>
+                    <a href="/brand?page=<%=curPage-1<1?1:curPage-1%>&pageSize=<%= pageSize%>  " aria-label="Previous ">
+                      <span aria-hidden="true ">&laquo;</span>
+                    </a>
+                  </li>
+                  <!-- 总条数/每页条数 == 需要显示出来的总页数：totalPage    -->
+                  <% for(var i = 0 ; i < totalPage ;i++){%>
+                    <li class="<%= curPage ==(i+1) ? 'active' : ""%>">
+                      <a href="/brand?page=<%= i+1%>&pageSize=<%= pageSize%> ">
+                        <%= i+1%>
+                      </a>
+                    </li>
+                    <% } %>
+
+                      <li>
+                        <a href="/brand?page=<%=curPage+1>totalPage?totalPage:curPage+1%>&pageSize=<%=pageSize%>" aria-label="Next">
+                          <span aria-hidden="true ">&raquo;</span>
+                        </a>
+                      </li>
+                </ul>
+              </nav>
             </div>
           </div>
         </div>
@@ -42,3 +116,4 @@
 </body>
 
 </html>
+<script src="/js/phone.js"></script>

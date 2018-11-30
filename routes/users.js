@@ -3,7 +3,6 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var router = express.Router();
 var async = require('async');
-
 //构建url地址
 var url = 'mongodb://127.0.0.1:27017';
 
@@ -12,7 +11,7 @@ router.get('/', function (req, res, next) {
   //这里做数据分页操作
 
   //获取前端传过来的数据
-  var page = parseInt( req.query.page) || 1;  //默认是第一页
+  var page = parseInt(req.query.page) || 1;  //默认是第一页
   var pageSize = parseInt(req.query.pageSize) || 5;  //每页显示的条数
   var totalSize = 0; //总条数---需要查询数据库
 
@@ -28,44 +27,44 @@ router.get('/', function (req, res, next) {
     }
     var db = client.db('nodejs-project');
     async.series([
-      function(cb){
+      function (cb) {
         //查询全部
-        db.collection('user').find().count(function(err,num){
-          if(err){
-              cb(err);
-          }else{
+        db.collection('user').find().count(function (err, num) {
+          if (err) {
+            cb(err);
+          } else {
             totalSize = num;
             cb(null);
           }
         })
 
-      },function(cb){
-          //查询当前页的数据  page * pageSize - pageSize
-          db.collection('user').find().limit(pageSize).skip(page*pageSize - pageSize).toArray(function(err,data){
-            if(err){
-              cb(err);
-            }else{
-              cb(null,data);
-            }
-          })
+      }, function (cb) {
+        //查询当前页的数据  page * pageSize - pageSize
+        db.collection('user').find().limit(pageSize).skip(page * pageSize - pageSize).toArray(function (err, data) {
+          if (err) {
+            cb(err);
+          } else {
+            cb(null, data);
+          }
+        })
 
       }
-        //results 是一个数组 【undefined ， data】，第一个没穿数据：undefined
-        //第二个传了数据 ：data
-    ],function(err,results){ 
-      if(err){
-        res.render('error',{
-          message:'查询数据错误',
-          error:err
+      //results 是一个数组 【undefined ， data】，第一个没穿数据：undefined
+      //第二个传了数据 ：data
+    ], function (err, results) {
+      if (err) {
+        res.render('error', {
+          message: '查询数据错误',
+          error: err
         })
-      }else{
+      } else {
         //计算出总条数，将其传递到前端
-        var totalPage = Math.ceil(totalSize/pageSize);
-        res.render('userManage',{
-          list : results[1],
-          totalPage : totalPage,
+        var totalPage = Math.ceil(totalSize / pageSize);
+        res.render('userManage', {
+          list: results[1],
+          totalPage: totalPage,
           curPage: page,    //当前页
-          pageSize:pageSize
+          pageSize: pageSize
         })
       }
     })
@@ -328,6 +327,85 @@ router.get('/delete', function (req, res, next) {
     })
   })
 })
+router.get('/search', function (req, res, next) {
+  var searchWord = req.query.searchWord;
+  var page = parseInt(req.query.page) || 1;  //默认是第一页
+  var pageSize = parseInt(req.query.pageSize) || 5;  //每页显示的条数
+  var totalSize = 0; //总条数---需要查询数据库
+  var filter = new RegExp(searchWord);
+  MongoClient.connect(url, { useNewUrlParser: true }, function (err, client) {
+    if (err) {
+      res.render('error', {
+        message: '连接失败',
+        error: err
+      })
+      return;
+    }
+    var db = client.db('nodejs-project');
+    async.series([
+      function (cb) {
+        //查询全部
+        db.collection('user').find({ username: filter }).count(function (err, num) {
+          if (err) {
+            cb(err);
+          } else {
+            totalSize = num;
+            cb(null);
+          }
+        })
+
+      }, function (cb) {
+        //查询当前页的数据  page * pageSize - pageSize
+        db.collection('user').find({ username: filter }).limit(pageSize).skip(page * pageSize - pageSize).toArray(function (err, data) {
+          if (err) {
+            cb(err);
+          } else {
+            cb(null, data);
+          }
+        })
+
+      }
+      //results 是一个数组 【undefined ， data】，第一个没穿数据：undefined
+      //第二个传了数据 ：data
+    ], function (err, results) {
+      if (err) {
+        res.render('error', {
+          message: '查询数据错误',
+          error: err
+        })
+      } else {
+        //计算出总条数，将其传递到前端
+        var totalPage = Math.ceil(totalSize / pageSize);
+        res.render('userManage', {
+          list: results[1],
+          totalPage: totalPage,
+          curPage: page,    //当前页
+          pageSize: pageSize
+        })
+      }
+      console.log(results[1]);
+      client.close();
+    })
+  })
 
 
+
+  //以下操作是不可取的，前端渲染不出来,将得出的条件，带入查询的的路由中
+  /* var searchWord = req.query.searchWord;
+   var filter = new RegExp(searchWord);
+ // console.log(searchWord+"=============")
+   MongoClient.connect(url,{useNewUrlParser:true},function(err,client){
+       if(err){
+           res.render('error',{
+             message:'连接失败',
+             error:err
+           })
+         return;
+       }
+       var db = client.db('nodejs-project');
+       db.collection('user').find({username:filter}).toArray(function(err,data){
+         
+       })
+   })*/
+})
 module.exports = router;

@@ -5,6 +5,15 @@
     float: right;
     color: black;
 }
+.welcome .col-lg-6{
+    width: 100%;
+}
+.input-group{
+    width: 100%;
+}
+.col-lg-6 .input-group .form-control{
+    width: 92%;
+}
 .welcome table tbody tr:hover{
     background: rgb(36, 65, 94);
     color: aliceblue;
